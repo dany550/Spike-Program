@@ -3,28 +3,80 @@ from umath import cos, sin
 
 
 def sign(x):
+    '''
+    Parameters:
+        x : number to be checked
+    Returns:
+        1 if x > 0, -1 if x < 0, and 0 if x == 0.
+    '''
     if x >0:
         return 1
     if x == 0:
         return 0
     return -1
 
-def clamp(x, minVal, maxVal):
+def clamp(x: float, minVal: float, maxVal: float) -> float:
+    '''
+    Parameters:
+        x : number to be clamped
+        minVal : minimum value
+        maxVal : maximum value
+    Returns:
+        the clamped value of x between minVal and maxVal.
+    '''
     if x < minVal:
         return minVal
     if x > maxVal:
         return maxVal
     return x
 
-def maxV(x,v):
-    if x>v:
-        return v
-    return x
+#def maxV(x,v):
+#    if x>v:
+#        return v
+#    return x
 
-def minV(x,v):
-    if x<v:
-        return v
-    return x
+def maxV(*x: float) -> float:
+    '''
+    Parameters:
+        x : list of numbers
+    Returns:
+        the largest number in a list of numbers.
+    '''
+    m = x[0]
+    for i in x:
+        if i > m:
+            m = i
+    return m
+
+#def minV(x,v):
+#    if x<v:
+#        return v
+#    return x
+
+def minV(*x: float) -> float:
+    '''
+    Parameters:
+        x : list of numbers
+    Returns:
+        the smallest number in a list of numbers.
+    '''
+    m = x[0]
+    for i in x:
+        if i < m:
+            m = i
+    return m
+
+def avrV(*x: float) -> float:
+    '''
+    Parameters:
+        x : list of numbers
+    Returns:
+        the average of a list of numbers.
+    '''
+    s = 0
+    for i in x:
+        s += i
+    return s/len(x)
 
 class vec2:
     def __init__(self, x: float, y: float):

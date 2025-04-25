@@ -10,6 +10,8 @@ turnCoeff = pi/12
 
 def toPos(pos, speed = 1000, brake = True):
     offset = r.pos
+    #isn't it inpractical to always name robots r?
+    #r = robot
     rotMat = mat2.rotation(-atan2((pos-offset).y,(pos-offset).x))
     length = rotMat*(pos - offset)
     swap = sign(length.x - (rotMat*r.pos).x)
