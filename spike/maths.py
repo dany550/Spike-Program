@@ -80,6 +80,12 @@ def avrV(*x: float) -> float:
 
 class vec2:
     def __init__(self, x: float, y: float):
+        '''
+        Poziční vektor, ulehčující práci s polohou
+        Parameters:
+            x : x coordinate
+            y : y coordinate
+        '''
         self.x = x
         self.y = y
 
