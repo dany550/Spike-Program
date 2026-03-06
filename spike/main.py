@@ -1,5 +1,5 @@
 
-from imgs import *
+from spike.Device_manager.imgs import *
 from spike.Device_manager.screen import *
 from vyzva import *
 

@@ -16,8 +16,6 @@ class driveManager:
         self.cDeacc = 50
         self.cStart = vec2(0,0)
         self.cFinish = vec2(0,0)
-        #multitasking
-        self.tasks = []
 
     def setDefaultMode(self):
         #both
@@ -109,6 +107,26 @@ class driveManager:
         self.rdeacc = 555
         self.braker = True   
     
+
+    ###opravit
+    def setSpeed(self, lSpeed: float, rSpeed: float):
+        self.lM.setSpeed(lSpeed)
+        self.rM.setSpeed(rSpeed)
+        pass
+    
+    def stop(self, brake = True):
+        if brake:
+            self.lM.hold()
+            self.rM.hold()
+            wait(200)
+            self.lM.brake()
+            self.rM.brake()
+        else:
+            self.lM.brake()
+            self.rM.brake()
+        pass
+
+
     def setMotorsToDef(self):
         self.robot.devices[0].setDefAngle()
         self.robot.devices[1].setDefAngle()
@@ -140,28 +158,6 @@ class driveManager:
         
     def turnMotor(self, deviceID, angle:float, speed = 1000, background = False, simple = False, time = 0):
         self.turnMotorRad(deviceID, angle/180 * pi, speed=speed, background=background, simple=simple, time=time)
-    
-    def isTasksRunning(self, numOfTasks = 0):
-        if len(self.tasks) > numOfTasks:
-            return True
-        return False
-    
-    def waitForTasks(self, numOfTasks = 0):
-        while self.isTasksRunning(numOfTasks = numOfTasks):
-            self.runTasks()
-    
-    def stopTasks(self):
-        self.tasks = []
-    
-    def addTask(self, gen):
-        self.tasks.append(gen)
-    
-    def runTasks(self):
-        for task in self.tasks[:]:
-            try:
-                next(task)
-            except StopIteration:
-                self.tasks.remove(task)
     
     def straight(self, length, speed = 1000, backwards = False, background = False):
         self.toPos(self.robot.pos + mat2.rotation(self.robot.hub.angleRad()) * vec2(length,0), speed, backwards, background=background)

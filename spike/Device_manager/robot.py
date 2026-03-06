@@ -9,7 +9,6 @@ class rdevice:
     def __init__(self, port: Port):
         self.port = port
 
-
 class robot:
     def __init__(self, leftPort, rightPort, wDiameter,axle, pos = vec2(0,0)):
         self.hub = hub()
@@ -19,30 +18,36 @@ class robot:
         self.pos = pos
         self.Diameter = wDiameter
         self.axle = axle
-        
-    def setSpeed(self, lSpeed: float, rSpeed: float):
-        self.lM.setSpeed(lSpeed)
-        self.rM.setSpeed(rSpeed)
-        pass
+        #multitasking
+        self.tasks = []
     
-    def stop(self, brake = True):
-        if brake:
-            self.lM.hold()
-            self.rM.hold()
-            wait(200)
-            self.lM.brake()
-            self.rM.brake()
-        else:
-            self.lM.brake()
-            self.rM.brake()
-        pass
+    def isTasksRunning(self, numOfTasks = 0):
+        if len(self.tasks) > numOfTasks:
+            return True
+        return False
+    
+    def waitForTasks(self, numOfTasks = 0):
+        while self.isTasksRunning(numOfTasks = numOfTasks):
+            self.runTasks()
+    
+    def stopTasks(self):
+        self.tasks = []
+    
+    def addTask(self, gen):
+        self.tasks.append(gen)
+    
+    def runTasks(self):
+        for task in self.tasks[:]:
+            try:
+                next(task)
+            except StopIteration:
+                self.tasks.remove(task)
     
     def addDevice(self, device:rdevice):
         self.devices.append(device)
         
     def update(self):
         self.pos += navigate(self.lM, self.rM, self.hub, self.Diameter)
-    pass
 
 class Ultrasonic(rdevice):
     def __init__(self, port: Port):
@@ -155,7 +160,7 @@ class hub:
 
     def image(self, image):
         self.m_hub.display.icon(image)
-        
+
     def clear(self):
         self.m_hub.display.off()
 
