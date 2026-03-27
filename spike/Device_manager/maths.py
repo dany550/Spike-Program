@@ -31,7 +31,7 @@ def avr(*x):
         values = x
     return sum(values) / len(values) if values else 0
 
-def angleDiff(a, b):
+def angleDiff(a, b, simple = False):
     '''returns difference between angles a and b
     - in radians
     - [(a - b) modulo 2pi] - pi'''
@@ -41,6 +41,13 @@ def angleDiff(a, b):
     while diff < -pi:
         diff += 2 * pi
     return diff
+
+def angleDiff(angle1:float, angle2:float, simple = False):
+        if simple:
+            return angle2 - angle1
+        a1 = (angle1) % (2*pi)
+        a2 = (angle2) % (2*pi)
+        return (a2 - a1 + pi) % (2*pi) - pi
 
 class vec2:
     def __init__(self, x: float, y: float):

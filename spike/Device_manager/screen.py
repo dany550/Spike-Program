@@ -1,13 +1,43 @@
-from spike.Device_manager.robot import*
+from Device_manager.robot import Robot
+from Device_manager.hub import Hub
+from pybricks.parameters import Button, Color
+from Device_manager.maths import *
+from pybricks.tools import wait
+from pybricks.tools import Matrix
+
+class Page:
+    def __init__(self,func, hub: Hub = None, icon: Matrix = None, image = None, delta = 0):
+        self.func = func
+        self.icon = icon
+        self.image = image
+        self.hub = hub
+        self.delta = delta
+    
+    def renderIcon(self):
+        if self.icon is None:
+            for i in range(5):
+                for o in range(4):
+                    self.hub.pixel(i, o, 0)
+            return
+        for i in range(maxV(self.icon.shape[0],4)):
+            for o in range(self.icon.shape[1]):
+                self.hub.pixel(o, i, self.icon[i, o])
+    def renderImage(self):
+        if self.image is None:
+            return
+        if  self.delta == 0:
+            self.hub.image(self.image)
+        else:
+            self.hub.animate(self.image,self.delta)
 
 class Screen:
-    def __init__(self, hub: hub, menuRow = 4):
+    def __init__(self, hub: Hub, menuRow = 4, *pages: Page):
         self.menuRow = menuRow
         self.hub = hub
         self.width = 5
         self.height = 5
         self.currPage = 0
-        self.pages = []
+        self.pages = list(pages)
         self.hub.color(Color.CYAN)
         self.hub.setOffButton(Button.LEFT_MINUS)
         
@@ -18,7 +48,7 @@ class Screen:
     def __repr__(self):
         return self.__str__()
     
-    def addPage(self, page):
+    def addPage(self, page:Page):
         page.hub = self.hub
         self.pages.append(page)
     
@@ -112,32 +142,7 @@ class Screen:
             elif i < len(self.pages):
                 bright = 30
             self.hub.pixel(i,self.menuRow, bright)
-class Page:
-    def __init__(self,func, hub = None, icon = None, image = None, delta = 0):
-        self.func = func
-        self.icon = icon
-        self.image = image
-        self.hub = hub
-        self.delta = delta
-    
-    def renderIcon(self):
-        if self.icon is None:
-            for i in range(5):
-                for o in range(4):
-                    self.hub.pixel(i, o, 0)
-            return
-        for i in range(maxV(self.icon.shape[0],4)):
-            for o in range(self.icon.shape[1]):
-                self.hub.pixel(o, i, self.icon[i, o])
-    def renderImage(self):
-        if self.image is None:
-            return
-        if  self.delta == 0:
-            self.hub.image(self.image)
-        else:
-            self.hub.animate(self.image,self.delta)
             
-
 l1 = Matrix([
     [0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0],
