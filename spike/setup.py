@@ -1,9 +1,9 @@
 from pybricks.parameters import *
-from Device_manager.maths import *
+from maths import *
 from driveFunc import driveManager
-from Device_manager.robot import *
+from robot import *
 
-r = Robot(Port.E, Port.A, 5.6, 19.1, pos=vec2(18, 15.5))
+r = robot(Port.E, Port.A, 5.6, 19.1, pos=vec2(18, 15.5))
 r.lM.reverse = True
 r.rM.switchDir = True
 r.lM.switchDir = True

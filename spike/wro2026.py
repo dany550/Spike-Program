@@ -1,8 +1,8 @@
-from pybricks.tools import wait
+from pybricks.tools import wait, Matrix
 from pybricks.parameters import Color, Port, Button
 from pybricks.pupdevices import ColorSensor
-from Device_manager.maths import vec2
-from Device_manager.robot import Robot
+from maths import vec2, pi
+from robot import robot
 from driveFunc import driveManager
 from pybricks.pupdevices import Motor
 from setup import *
@@ -113,6 +113,14 @@ robot.rM.reverse = #False
 robot.lM.switchDir = True
 robot.rM.switchDir = True
 """
+
+iwro = Matrix([
+    [100, 0, 100, 0, 100],
+    [100, 0, 100, 0, 100],
+    [100, 0, 100, 0, 100],
+    [0, 100, 100, 100, 0],
+    [0, 0, 0, 0, 0]
+])
 
 def wro():
     cubesLoad = [cube(Color.YELLOW, vec2(19, 42.5)), cube(Color.YELLOW, vec2(19, 48)), cube(Color.BLUE, vec2(19, 58.5)), cube(Color.BLUE, vec2(19, 65))]

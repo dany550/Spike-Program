@@ -114,6 +114,12 @@ class vec2:
         """Calculate the angle of the vector in radians."""
         return atan2(self.y, self.x)
 
+    def rotated(self, angle):
+        """Rotate the vector by a given angle in radians."""
+        c = cos(angle)
+        s = sin(angle)
+        return vec2(self.x * c - self.y * s, self.x * s + self.y * c)
+
 class mat2:
     def __init__(self, a: float, b:float , c:float, d:float):
 
