@@ -34,16 +34,32 @@ class mozaikovator:
         has 3 chambers for cubes and 2 motors for lifting and grabbing cubes
         excentricity: center in center of rotation; x in direction of motion; y perpendicular to x positive to the left, measured in read/write position"""
         self.drive = drive
+        self.hub = self.drive.robot.hub.m_hub
         self.cubes = []
+        self.failed = False
         self.liftMotor = Motor(liftMotor)
         self.grabMotor = Motor(grabMotor)
         self.excentricity = excentricity
+
+    def failCheck(self):
+        fail_angle = 10
+        if abs(self.hub.imu.tilt()[1]) > fail_angle:
+            self.hub.speaker.beep()
+            return True
+        return False
 
     def up(self):
         self.liftMotor.run_target(1000, -145)
 
     def down(self):
-        self.liftMotor.run_target(1000, 123)
+        self.liftMotor.run_target(1000, 123, wait=False)
+        while not self.liftMotor.done():
+            if self.failCheck() or self.liftMotor.stalled():
+                self.failed = True
+                return False
+            else:
+                wait(10)
+        return True
     
     def midle(self):
         self.liftMotor.run_target(1000, 0)
@@ -60,6 +76,8 @@ class mozaikovator:
     def pickUp(self):
         self.release()
         self.down()
+        if self.failed:
+            return
         wait(200)
         self.grab()
         wait(200)
@@ -73,10 +91,18 @@ class mozaikovator:
     def load(self, cubes: list[cube]):
         """loads 3 of each color in cubes"""
         for cube in cubes:
+            done = False
             self.drive.toPos(cube.pos-self.excentricity.rotated(pi/2))
             self.drive.rotate(90)
-            self.pickUp()
-            self.cubes.append(cube)
+            while not done:
+                self.pickUp()
+                if self.failed:
+                    done = False
+                    self.up()
+                    #add kvedlací sekvence if needed
+                else:
+                    done = True
+                    self.cubes.append(cube)
 
     def unload(self, pos: vec2, orientation: int, n = 4):
         """unloads all cubes in mozaikovator"""

@@ -9,7 +9,3 @@ r.rM.switchDir = True
 r.lM.switchDir = True
 r.hub.addOffset(-90)
 drive = driveManager(r)
-
-#vyzva
-#drive.robot.addDevice(motor(Port.D))
-#drive.robot.addDevice(Ultrasonic(Port.A))
