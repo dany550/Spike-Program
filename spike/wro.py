@@ -2,7 +2,7 @@ from setup import *
 from pybricks.tools import wait
 from tester import *
 from imgs import wroimg, wroimg2
-from maths import pi, mat2
+from spike_lib.maths import pi, mat2, sign, vec2, clamp
 from umath import radians, cos, pi, degrees
 
 
