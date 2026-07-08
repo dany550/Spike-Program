@@ -2,7 +2,8 @@ from pybricks.parameters import *
 from pybricks.pupdevices import *
 from pybricks.hubs import PrimeHub
 from pybricks.tools import *
-from spike_lib.maths import pi, vec2, mat2
+from spike_lib.maths import vec2, mat2
+from umath import pi
 
     
 class rdevice:
@@ -10,7 +11,7 @@ class rdevice:
         self.port = port
 
 class robot:
-    def __init__(self, leftPort, rightPort,wDiameter,axle, pos = vec2(0,0)):
+    def __init__(self, leftPort, rightPort, wDiameter, axle, pos = vec2(0,0)):
         self.hub = hub()
         self.lM = motor(leftPort)
         self.rM = motor(rightPort)
@@ -23,7 +24,6 @@ class robot:
         self.lM.setSpeed(lSpeed)
         self.rM.setSpeed(rSpeed)
         pass
-    
     
     def stop(self, brake = True):
         if brake:
@@ -104,8 +104,10 @@ class motor(rdevice):
         return float(self.m_motor.angle())/180 * pi - self.offset
 
 class hub:
-    def __init__(self):
-        self.m_hub = PrimeHub()
+    def __init__(self, topSide: Axis = Axis.Z, frontSide: Axis = Axis.X):
+        self.m_hub = PrimeHub(topSide, frontSide)
+        self.topSide = topSide
+        self.frontSide = frontSide
         self.angleOffset = 0
         self.resetAngle()
         self.setOffButton(Button.BLUETOOTH)
@@ -115,16 +117,16 @@ class hub:
     
     def angle(self):
         if self.switch:
-            return - (self.m_hub.imu.rotation(Axis.Z) - self.angleOffset)
-        return self.m_hub.imu.rotation(Axis.Z) - self.angleOffset
+            return - (self.m_hub.imu.rotation(self.topSide) - self.angleOffset)
+        return self.m_hub.imu.rotation(self.topSide) - self.angleOffset
     
     def angleRad(self):
         if self.switch:
-            return -(self.m_hub.imu.rotation(Axis.Z) - self.angleOffset) / 180 * pi
-        return (self.m_hub.imu.rotation(Axis.Z) - self.angleOffset) / 180 * pi
+            return -(self.m_hub.imu.rotation(self.topSide) - self.angleOffset) / 180 * pi
+        return (self.m_hub.imu.rotation(self.topSide) - self.angleOffset) / 180 * pi
     
     def resetAngle(self):
-        self.angleOffset = self.m_hub.imu.rotation(Axis.Z)
+        self.angleOffset = self.m_hub.imu.rotation(self.topSide)
         
     def pixel(self,x,y, brigthness=100):
         self.m_hub.display.pixel(y, x, brigthness)
