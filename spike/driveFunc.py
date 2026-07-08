@@ -16,6 +16,7 @@ class driveManager:
         self.cDeacc = 50
         self.cStart = vec2(0,0)
         self.cFinish = vec2(0,0)
+        self.sideSwitch = 1
         #multitasking
         self.tasks = []
 
@@ -187,7 +188,7 @@ class driveManager:
                 self.robot.setSpeed(aspeed*ratio, aspeed)
         self.robot.stop(self.brake)
 
-    def toPosGen(self, pos, speed = 1000, backwards = False, stop = True, turn = True, tolerance = 0.0, extraDist = 0.0, background = False, connect = [False, False]):
+    def toPosGen(self, pos: vec2, speed = 1000, backwards = False, stop = True, turn = True, tolerance = 0.0, extraDist = 0.0, background = False, connect = [False, False]):
         offset:vec2 = self.robot.pos
         angle:float = atan2((pos-offset).y,(pos-offset).x)
         rotMat:mat2 = mat2.rotation(-angle)
@@ -215,6 +216,7 @@ class driveManager:
             self.robot.stop(self.brake)
             
     def toPos(self, pos, speed = 1000, backwards = False, stop = True, turn = True, tolerance = 0.0, extraDist = 10.0, background=False, connect = [False, False]):
+        pos = vec2(pos.x, pos.y * self.sideSwitch)
         if background:
             self.addTask(self.toPosGen(pos, speed = speed, backwards = backwards, stop = stop, turn = turn, tolerance = tolerance, extraDist = extraDist, background=background, connect=connect))
         else:
@@ -222,7 +224,6 @@ class driveManager:
                 self.runTasks()
                 pass
     
-
         
     def calcDir(self, pos, length, speed, offsetAngle, backwards = False, extraDist = 0.0):
         a2 = (self.robot.hub.angleRad()-offsetAngle) % (2*pi)

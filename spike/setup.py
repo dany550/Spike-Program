@@ -4,10 +4,13 @@ from driveFunc import driveManager
 from robot import *
 
 #C
-r = robot(Port.E, Port.A, 5.79, 19.1,pos=vec2(0,0))
+
+r = robot(Port.F, Port.B, 5.7, 20.6,pos=vec2(0,0))
 r.lM.reverse = True
+r.rM.reverse = False
 r.rM.switchDir = True
 r.lM.switchDir = True
 r.hub.addOffset(0)
 r.pos = vec2(0,0)
 drive = driveManager(r)
+ul = UltrasonicSensor(Port.D)
