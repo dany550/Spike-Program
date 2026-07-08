@@ -6,13 +6,13 @@ from spike_lib.maths import vec2, mat2
 from umath import pi
 
     
-class rdevice:
+class Rdevice:
     def __init__(self, port: Port):
         self.port = port
 
-class robot:
-    def __init__(self, leftPort, rightPort, wDiameter, axle, pos = vec2(0,0)):
-        self.hub = hub()
+class Robot:
+    def __init__(self, leftPort, rightPort, wDiameter, axle, topSide: Axis = Axis.Z, frontSide: Axis = Axis.X, pos = vec2(0,0)):
+        self.hub = Hub(topSide, frontSide)
         self.lM = motor(leftPort)
         self.rM = motor(rightPort)
         self.devices = []
@@ -37,14 +37,14 @@ class robot:
             self.rM.brake()
         pass
     
-    def addDevice(self, device:rdevice):
+    def addDevice(self, device:Rdevice):
         self.devices.append(device)
         
     def update(self):
         self.pos += navigate(self.lM, self.rM, self.hub, self.Diameter)
     pass
 
-class Ultrasonic(rdevice):
+class Ultrasonic(Rdevice):
     def __init__(self, port: Port):
         super().__init__(port)
         self.m_sensor = UltrasonicSensor(port)
@@ -58,7 +58,7 @@ class Ultrasonic(rdevice):
     def angleRad(self):
         return self.m_sensor.angle()/180 * pi
 
-class motor(rdevice):
+class motor(Rdevice):
     def __init__(self, port: Port):
         super().__init__(port)
         self.reverse = False
@@ -100,10 +100,11 @@ class motor(rdevice):
     
     def angle(self):
         return float(self.m_motor.angle()) - self.offset/pi * 180
+    
     def angleRad(self):
         return float(self.m_motor.angle())/180 * pi - self.offset
 
-class hub:
+class Hub:
     def __init__(self, topSide: Axis = Axis.Z, frontSide: Axis = Axis.X):
         self.m_hub = PrimeHub(topSide, frontSide)
         self.topSide = topSide
@@ -112,6 +113,7 @@ class hub:
         self.resetAngle()
         self.setOffButton(Button.BLUETOOTH)
         self.switch = False
+        
     def addOffset(self, offset):
         self.angleOffset += offset    
     
@@ -168,7 +170,7 @@ class hub:
     def clear(self):
         self.m_hub.display.off()
 
-def navigate(lM:motor, rM:motor, hub:hub, diameter):
+def navigate(lM:motor, rM:motor, hub: Hub, diameter):
     scalar = (lM.deltaAngle*diameter + rM.deltaAngle*diameter) * 0.25
     vec = scalar * mat2.rotation(hub.angleRad()) * vec2(1, 0)
     lM.Update()

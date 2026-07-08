@@ -3,7 +3,7 @@ from spike_lib.maths import maxV, minV
 from pybricks.parameters import Color, Button
 
 class Screen:
-    def __init__(self, hub: hub, menuRow = 4):
+    def __init__(self, hub: Hub, menuRow = 4):
         self.menuRow = menuRow
         self.hub = hub
         self.width = 5

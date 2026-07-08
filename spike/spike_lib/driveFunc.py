@@ -1,11 +1,11 @@
-from spike_lib.maths import vec2, mat2, Line, pi, sign, clamp, minV, maxV, generateBezierCurve, angleDiff
+from spike_lib.maths import vec2, mat2, Line, sign, clamp, minV, maxV, generateBezierCurve, angleDiff
 from spike_lib.robot import *
 from pybricks.tools import wait
-from umath import fabs, asin, atan2, cos, sin
+from umath import pi, fabs, asin, atan2, cos, sin
 
 #todo circle to pos background
 
-class driveSettings:
+class DriveSettings:
     def __init__(self, defspeed = 250, acc = 80, deacc = 30, turnCoeff = 3, brake = True, tolDiff = pi/180, accuracy = 0.005, racc = 500, rdeacc = 500, braker = True):
         #both
         self.defspeed = defspeed
@@ -21,8 +21,8 @@ class driveSettings:
         self.rdeacc = rdeacc
         self.braker = braker
 
-class driveManager:
-    def __init__(self, robot:robot):
+class DriveManager:
+    def __init__(self, robot: Robot):
         self.robot = robot
         self.setDefaultMode()
         #curves
